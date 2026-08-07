@@ -36,7 +36,21 @@ export default function Todo(){
             task.filter(task => task.id != id)
         )
     }
-    
+
+        const [filter,setFilter] = useState<"all" | "active" | "completed">("all")
+
+
+    const filteredTasks = task.filter(task => {
+    if (filter === "all") {
+        return true;
+    }
+
+    if (filter === "active") {
+        return !task.completed;
+    }
+
+    return task.completed
+});
 
     return(
         <>
@@ -48,13 +62,16 @@ export default function Todo(){
                         setId( (id) => id + 1 )
                         }}>Add</button>
 
+                <button onClick={() => {setFilter("all")} } > All </button>
+                <button onClick={() => setFilter("active")}>Active</button>
+                <button onClick={() => setFilter("completed")}>Completed</button>
+
+                
+
                 <ul>
-                    {task.map((task) => ( 
+                    {filteredTasks.map((task) => ( 
                         <li key={task.id} style={{
                             textDecoration:task.completed?"line-through":'none'}}>
-                            
-                            
-                            
                             {task.text}&nbsp;
                             <input type="checkbox" onClick={()=>handleToggle(task.id)}></input>&nbsp;
                             <button onClick={()=>{deleteTask(task.id)}}>delete</button>
